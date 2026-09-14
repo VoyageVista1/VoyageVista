@@ -3,8 +3,6 @@
 set -e
 set -x
 
-docker compose up -d mailpit
-
 cd backend/
 
 uv sync
@@ -17,5 +15,3 @@ bun install
 cd frontend/
 bun run build
 
-cd ../backend/
-uv run fastapi dev

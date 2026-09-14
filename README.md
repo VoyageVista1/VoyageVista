@@ -1,7 +1,33 @@
 # Full Stack FastAPI Template
-
 [![Test Docker Compose](../../actions/workflows/test-docker-compose.yml/badge.svg)](../../actions/workflows/test-docker-compose.yml)
 [![Test Backend](../../actions/workflows/test-backend.yml/badge.svg)](../../actions/workflows/test-backend.yml)
+## Getting started
+### Requirements
+
+* [Bun](https://bun.sh/)
+* [uv](https://docs.astral.sh/uv/) for Python package and environment management.
+
+### Note this guide is made for Unix (mac/linux) NOT FOR WINDOWS
+To get started I've made a start script in bash. Go into the root of the project and run this.
+```bash
+scripts/startup.sh
+```
+This script should take care of building the frontend, running the migrations and filling the database with initial data.
+
+After that you can run the project with this command. Don't forget to install [uv](https://docs.astral.sh/uv/) 
+```bash
+cd backend/
+uv run fastapi dev
+```
+
+You can now find the project running on http://localhost:8000/
+
+If you have [docker](https://www.docker.com/) installed you can use Mailpit for local email recovery. It should already work with the entire project but it's not required to run the project.
+```bash
+docker compose up -d mailpit
+```
+
+The rest of the docs are from the template and probably ai generated but could be useful for more details.
 
 ## Technology Stack and Features
 
@@ -26,37 +52,12 @@
 - ✅ Tests with [Pytest](https://pytest.org).
 - 🏭 CI (continuous integration) and CD (continuous deployment) based on GitHub Actions.
 
-### Dashboard Login
 
-![Dashboard login screenshot](img/login.png)
+## Development
 
-### Dashboard - Admin
+General development docs: [development.md](./development.md).
 
-![Admin dashboard screenshot](img/dashboard.png)
-
-### Dashboard - Items
-
-![Items dashboard screenshot](img/dashboard-items.png)
-
-### Dashboard - Dark Mode
-
-![Dark mode dashboard screenshot](img/dashboard-dark.png)
-
-### React Email Templates
-
-![Email templates screenshot](img/react-email.png)
-
-### Mailpit - Local Email Testing
-
-![Mailpit screenshot](img/mailpit.png)
-
-### Interactive API Documentation
-
-![API docs](img/docs.png)
-
-## How to Use It
-
-Click the **Use this template** button at the top of this page to create a new repository.
+This includes the local FastAPI and Vite workflow, Docker Compose services, `.env` configuration, and more.
 
 ## Backend Development
 
@@ -66,20 +67,3 @@ Backend docs: [backend/README.md](./backend/README.md).
 
 Frontend docs: [frontend/README.md](./frontend/README.md).
 
-## Deployment
-
-Self-hosted deployment with Docker Compose: [deployment-docker-compose.md](./deployment-docker-compose.md).
-
-## Development
-
-General development docs: [development.md](./development.md).
-
-This includes the local FastAPI and Vite workflow, Docker Compose services, `.env` configuration, and more.
-
-## Release Notes
-
-Check the file [release-notes.md](./release-notes.md).
-
-## License
-
-The Full Stack FastAPI Template is licensed under the terms of the MIT license.
