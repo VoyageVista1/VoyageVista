@@ -12,7 +12,7 @@ To get started I've made a start script in bash. Go into the root of the project
 ```bash
 scripts/startup.sh
 ```
-This script should take care of building the frontend, running the migrations and filling the database with initial data. It's just a collection of the manual commands found in [development.md](./development.md), [frontend.md](./frontend/README.md), [backend.md](./backend/README.md).
+This script should take care of building the frontend, setting up the.env, running the migrations and filling the database with initial data. It's just a collection of the manual commands found in [development.md](./development.md), [frontend.md](./frontend/README.md), [backend.md](./backend/README.md).
 
 After that you can run the project with this command. Don't forget to install [uv](https://docs.astral.sh/uv/) 
 ```bash
