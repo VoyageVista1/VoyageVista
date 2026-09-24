@@ -7,10 +7,16 @@
 * [Bun](https://bun.sh/)
 * [uv](https://docs.astral.sh/uv/) for Python package and environment management.
 
-### Note this guide is made for Unix (mac/linux) NOT FOR WINDOWS
-To get started I've made a start script in bash. Go into the root of the project and run this.
+Run the start script for your OS from the root of the project.
+
+On Unix (macOS/Linux):
 ```bash
 scripts/startup.sh
+```
+
+On Windows (CMD, PowerShell, or Git Bash):
+```
+scripts\startup.bat
 ```
 This script should take care of building the frontend, setting up the.env, running the migrations and filling the database with initial data. It's just a collection of the manual commands found in [development.md](./development.md), [frontend.md](./frontend/README.md), [backend.md](./backend/README.md).
 
