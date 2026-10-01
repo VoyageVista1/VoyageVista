@@ -17,41 +17,6 @@ branch_labels = None
 depends_on = None
 
 def upgrade() -> None:
-    # The English schema reuses 5 table names from the Dutch schema
-    # (contract, ticket, audit_log, feedback, product_media) with different
-    # columns, so a plain create_table would fail with "already exists"
-    # when upgrading a Dutch database. Drop old Dutch tables first to
-    # end up with exactly sql_schema_english.sql. FKs are off during
-    # drops so child/parent order cannot block the replacement.
-    # Drop both PascalCase (legacy) and snake_case names for idempotency.
-    op.execute("PRAGMA foreign_keys=OFF")
-    for _t in (
-        "favoriet", "favorite", "feedback", "melding", "notification",
-        "audit_log", "klanttevredenheid", "customer_satisfaction",
-        "contactmoment", "contact_event", "ticket", "kennisbank_artikel",
-        "knowledge_base_article", "ticket_categorie", "ticket_category",
-        "notitie", "note", "taak", "task", "product_media",
-        "prijs_historie", "price_history", "mijlpaal", "milestone",
-        "project_reisonderdeel", "project_travel_component",
-        "ontwikkel_project", "development_project", "onderhandeling",
-        "negotiation", "contract", "reisonderdeel", "travel_component",
-        "leverancier", "supplier", "klant", "customer",
-        "systeem_gebruiker", "system_user",
-        # Legacy PascalCase names (Dutch schema + pre-snake_case English).
-        "Favoriet", "Favorite", "Feedback", "Melding", "Notification",
-        "AuditLog", "Klanttevredenheid", "CustomerSatisfaction",
-        "Contactmoment", "ContactEvent", "Ticket", "KennisbankArtikel",
-        "KnowledgeBaseArticle", "TicketCategorie", "TicketCategory",
-        "Notitie", "Note", "Taak", "Task", "ProductMedia",
-        "PrijsHistorie", "PriceHistory", "Mijlpaal", "Milestone",
-        "Project_Reisonderdeel", "Project_TravelComponent",
-        "OntwikkelProject", "DevelopmentProject", "Onderhandeling",
-        "Negotiation", "Contract", "Reisonderdeel", "TravelComponent",
-        "Leverancier", "Supplier", "Klant", "Customer",
-        "SysteemGebruiker", "SystemUser",
-    ):
-        op.execute(f"DROP TABLE IF EXISTS {_t}")
-    op.execute("PRAGMA foreign_keys=ON")
     # ### commands auto generated to match sql_schema_english.sql ###
     op.create_table('system_user',
     sa.Column('user_id', sa.Integer(), nullable=False),
