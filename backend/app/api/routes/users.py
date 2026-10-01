@@ -2,18 +2,18 @@ import uuid
 from typing import Any
 
 from fastapi import APIRouter, Depends, HTTPException
-from sqlmodel import col, delete, func, select
+from sqlmodel import col, func, select
 
 from app import crud
 from app.api.deps import (
     CurrentUser,
     SessionDep,
-    get_current_active_superuser,
+    get_current_admin,
 )
 from app.core.config import settings
 from app.core.security import get_password_hash, verify_password
 from app.models import (
-    Item,
+    ADMIN_PERMISSION,
     Message,
     UpdatePassword,
     User,
@@ -31,7 +31,7 @@ router = APIRouter(prefix="/users", tags=["users"])
 
 @router.get(
     "/",
-    dependencies=[Depends(get_current_active_superuser)],
+    dependencies=[Depends(get_current_admin)],
     response_model=UsersPublic,
 )
 def read_users(session: SessionDep, skip: int = 0, limit: int = 100) -> Any:
@@ -47,13 +47,11 @@ def read_users(session: SessionDep, skip: int = 0, limit: int = 100) -> Any:
     )
     users = session.exec(statement).all()
 
-    users_public = [UserPublic.model_validate(user) for user in users]
+    users_public = [UserPublic.from_user(user) for user in users]
     return UsersPublic(data=users_public, count=count)
 
 
-@router.post(
-    "/", dependencies=[Depends(get_current_active_superuser)], response_model=UserPublic
-)
+@router.post("/", dependencies=[Depends(get_current_admin)], response_model=UserPublic)
 def create_user(*, session: SessionDep, user_in: UserCreate) -> Any:
     """
     Create new user.
@@ -75,7 +73,7 @@ def create_user(*, session: SessionDep, user_in: UserCreate) -> Any:
             subject=email_data.subject,
             html_content=email_data.html_content,
         )
-    return user
+    return UserPublic.from_user(user)
 
 
 @router.patch("/me", response_model=UserPublic)
@@ -97,7 +95,7 @@ def update_user_me(
     session.add(current_user)
     session.commit()
     session.refresh(current_user)
-    return current_user
+    return UserPublic.from_user(current_user)
 
 
 @router.patch("/me/password", response_model=Message)
@@ -126,7 +124,7 @@ def read_user_me(current_user: CurrentUser) -> Any:
     """
     Get current user.
     """
-    return current_user
+    return UserPublic.from_user(current_user)
 
 
 @router.delete("/me", response_model=Message)
@@ -134,9 +132,12 @@ def delete_user_me(session: SessionDep, current_user: CurrentUser) -> Any:
     """
     Delete own user.
     """
-    if current_user.is_superuser:
+    if crud.user_has_permission(
+        session=session, user=current_user, name=ADMIN_PERMISSION
+    ):
         raise HTTPException(
-            status_code=403, detail="Super users are not allowed to delete themselves"
+            status_code=403,
+            detail="Users with the admin permission cannot delete themselves",
         )
     session.delete(current_user)
     session.commit()
@@ -156,7 +157,7 @@ def register_user(session: SessionDep, user_in: UserRegister) -> Any:
         )
     user_create = UserCreate.model_validate(user_in)
     user = crud.create_user(session=session, user_create=user_create)
-    return user
+    return UserPublic.from_user(user)
 
 
 @router.get("/{user_id}", response_model=UserPublic)
@@ -168,20 +169,22 @@ def read_user_by_id(
     """
     user = session.get(User, user_id)
     if user == current_user:
-        return user
-    if not current_user.is_superuser:
+        return UserPublic.from_user(current_user)
+    if not crud.user_has_permission(
+        session=session, user=current_user, name=ADMIN_PERMISSION
+    ):
         raise HTTPException(
             status_code=403,
             detail="The user doesn't have enough privileges",
         )
     if user is None:
         raise HTTPException(status_code=404, detail="User not found")
-    return user
+    return UserPublic.from_user(user)
 
 
 @router.patch(
     "/{user_id}",
-    dependencies=[Depends(get_current_active_superuser)],
+    dependencies=[Depends(get_current_admin)],
     response_model=UserPublic,
 )
 def update_user(
@@ -208,10 +211,10 @@ def update_user(
             )
 
     db_user = crud.update_user(session=session, db_user=db_user, user_in=user_in)
-    return db_user
+    return UserPublic.from_user(db_user)
 
 
-@router.delete("/{user_id}", dependencies=[Depends(get_current_active_superuser)])
+@router.delete("/{user_id}", dependencies=[Depends(get_current_admin)])
 def delete_user(
     session: SessionDep, current_user: CurrentUser, user_id: uuid.UUID
 ) -> Message:
@@ -223,10 +226,9 @@ def delete_user(
         raise HTTPException(status_code=404, detail="User not found")
     if user == current_user:
         raise HTTPException(
-            status_code=403, detail="Super users are not allowed to delete themselves"
+            status_code=403,
+            detail="Users with the admin permission cannot delete themselves",
         )
-    statement = delete(Item).where(col(Item.owner_id) == user_id)
-    session.exec(statement)
     session.delete(user)
     session.commit()
     return Message(message="User deleted successfully")

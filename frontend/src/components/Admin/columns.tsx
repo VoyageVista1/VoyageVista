@@ -39,13 +39,23 @@ export const columns: ColumnDef<UserTableData>[] = [
     ),
   },
   {
-    accessorKey: "is_superuser",
-    header: "Role",
-    cell: ({ row }) => (
-      <Badge variant={row.original.is_superuser ? "default" : "secondary"}>
-        {row.original.is_superuser ? "Superuser" : "User"}
-      </Badge>
-    ),
+    id: "permissions",
+    header: "Permissions",
+    cell: ({ row }) => {
+      const permissions = row.original.permissions ?? []
+      if (permissions.length === 0) {
+        return <Badge variant="secondary">None</Badge>
+      }
+      return (
+        <div className="flex flex-wrap gap-1">
+          {permissions.map((permission) => (
+            <Badge key={permission} variant="default">
+              {permission}
+            </Badge>
+          ))}
+        </div>
+      )
+    },
   },
   {
     accessorKey: "is_active",
