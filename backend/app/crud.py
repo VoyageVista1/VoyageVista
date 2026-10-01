@@ -1,17 +1,64 @@
-import uuid
 from typing import Any
 
 from sqlmodel import Session, select
 
 from app.core.security import get_password_hash, verify_password
-from app.models import Item, ItemCreate, User, UserCreate, UserUpdate
+from app.models import (
+    Permission,
+    User,
+    UserCreate,
+    UserPermission,
+    UserUpdate,
+)
+
+
+def get_permission_by_name(*, session: Session, name: str) -> Permission | None:
+    return session.exec(select(Permission).where(Permission.name == name)).first()
+
+
+def user_has_permission(*, session: Session, user: User, name: str) -> bool:
+    statement = (
+        select(Permission)
+        .join(UserPermission)
+        .where(UserPermission.user_id == user.id, Permission.name == name)
+    )
+    return session.exec(statement).first() is not None
+
+
+def set_permissions(*, session: Session, user: User, names: list[str]) -> None:
+    """Replace the permissions of a user, ignoring names that do not exist."""
+    permissions = []
+    for name in names:
+        permission = get_permission_by_name(session=session, name=name)
+        if permission is None:
+            raise ValueError(f"Unknown permission: {name}")
+        permissions.append(permission)
+
+    user.permissions = permissions
+    session.add(user)
+
+
+def grant_permission(*, session: Session, user: User, name: str) -> None:
+    """Add a permission to a user unless they already hold it."""
+    if user_has_permission(session=session, user=user, name=name):
+        return
+    permission = get_permission_by_name(session=session, name=name)
+    if permission is None:
+        raise ValueError(f"Unknown permission: {name}")
+    user.permissions.append(permission)
+    session.add(user)
 
 
 def create_user(*, session: Session, user_create: UserCreate) -> User:
-    db_obj = User.model_validate(
-        user_create, update={"hashed_password": get_password_hash(user_create.password)}
+    db_obj = User(
+        email=user_create.email,
+        is_active=user_create.is_active,
+        full_name=user_create.full_name,
+        hashed_password=get_password_hash(user_create.password),
     )
     session.add(db_obj)
+    session.flush()
+    set_permissions(session=session, user=db_obj, names=user_create.permissions)
     session.commit()
     session.refresh(db_obj)
     return db_obj
@@ -24,7 +71,10 @@ def update_user(*, session: Session, db_user: User, user_in: UserUpdate) -> Any:
         password = user_data["password"]
         hashed_password = get_password_hash(password)
         extra_data["hashed_password"] = hashed_password
+    permissions = user_data.pop("permissions", None)
     db_user.sqlmodel_update(user_data, update=extra_data)
+    if permissions is not None:
+        set_permissions(session=session, user=db_user, names=permissions)
     session.add(db_user)
     session.commit()
     session.refresh(db_user)
@@ -58,11 +108,3 @@ def authenticate(*, session: Session, email: str, password: str) -> User | None:
         session.commit()
         session.refresh(db_user)
     return db_user
-
-
-def create_item(*, session: Session, item_in: ItemCreate, owner_id: uuid.UUID) -> Item:
-    db_item = Item.model_validate(item_in, update={"owner_id": owner_id})
-    session.add(db_item)
-    session.commit()
-    session.refresh(db_item)
-    return db_item
