@@ -9,10 +9,11 @@ from jwt.exceptions import InvalidTokenError
 from pydantic import ValidationError
 from sqlmodel import Session
 
+from app import crud
 from app.core import security
 from app.core.config import settings
 from app.core.db import engine
-from app.models import TokenPayload, User
+from app.models import ADMIN_PERMISSION, TokenPayload, User
 
 reusable_oauth2 = OAuth2PasswordBearer(
     tokenUrl=f"{settings.API_V1_STR}/login/access-token"
@@ -55,8 +56,10 @@ def get_current_user(session: SessionDep, token: TokenDep) -> User:
 CurrentUser = Annotated[User, Depends(get_current_user)]
 
 
-def get_current_active_superuser(current_user: CurrentUser) -> User:
-    if not current_user.is_superuser:
+def get_current_admin(session: SessionDep, current_user: CurrentUser) -> User:
+    if not crud.user_has_permission(
+        session=session, user=current_user, name=ADMIN_PERMISSION
+    ):
         raise HTTPException(
             status_code=403, detail="The user doesn't have enough privileges"
         )

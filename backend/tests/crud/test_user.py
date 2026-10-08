@@ -1,10 +1,11 @@
+import pytest
 from fastapi.encoders import jsonable_encoder
 from pwdlib.hashers.bcrypt import BcryptHasher
 from sqlmodel import Session
 
 from app import crud
 from app.core.security import verify_password
-from app.models import User, UserCreate, UserUpdate
+from app.models import ADMIN_PERMISSION, User, UserCreate, UserUpdate
 from tests.utils.utils import random_email, random_lower_string
 
 
@@ -50,26 +51,61 @@ def test_check_if_user_is_active_inactive(db: Session) -> None:
     assert user.is_active is False
 
 
-def test_check_if_user_is_superuser(db: Session) -> None:
+def test_check_if_user_has_permission(db: Session) -> None:
     email = random_email()
     password = random_lower_string()
-    user_in = UserCreate(email=email, password=password, is_superuser=True)
+    user_in = UserCreate(email=email, password=password, permissions=[ADMIN_PERMISSION])
     user = crud.create_user(session=db, user_create=user_in)
-    assert user.is_superuser is True
+    assert [permission.name for permission in user.permissions] == [ADMIN_PERMISSION]
+    assert crud.user_has_permission(session=db, user=user, name=ADMIN_PERMISSION)
 
 
-def test_check_if_user_is_superuser_normal_user(db: Session) -> None:
+def test_check_if_user_has_no_permission(db: Session) -> None:
     username = random_email()
     password = random_lower_string()
     user_in = UserCreate(email=username, password=password)
     user = crud.create_user(session=db, user_create=user_in)
-    assert user.is_superuser is False
+    assert user.permissions == []
+    assert not crud.user_has_permission(session=db, user=user, name=ADMIN_PERMISSION)
+
+
+def test_create_user_unknown_permission(db: Session) -> None:
+    user_in = UserCreate(
+        email=random_email(),
+        password=random_lower_string(),
+        permissions=["not_a_permission"],
+    )
+    with pytest.raises(ValueError):
+        crud.create_user(session=db, user_create=user_in)
+
+
+def test_update_user_permissions(db: Session) -> None:
+    user_in = UserCreate(email=random_email(), password=random_lower_string())
+    user = crud.create_user(session=db, user_create=user_in)
+    assert user.permissions == []
+
+    crud.update_user(
+        session=db,
+        db_user=user,
+        user_in=UserUpdate(permissions=[ADMIN_PERMISSION]),
+    )
+    user_2 = db.get(User, user.id)
+    assert user_2
+    assert [permission.name for permission in user_2.permissions] == [ADMIN_PERMISSION]
+
+    crud.update_user(
+        session=db,
+        db_user=user_2,
+        user_in=UserUpdate(permissions=[]),
+    )
+    assert crud.get_user_by_email(session=db, email=user.email) is not None
+    assert not crud.user_has_permission(session=db, user=user_2, name=ADMIN_PERMISSION)
 
 
 def test_get_user(db: Session) -> None:
     password = random_lower_string()
     username = random_email()
-    user_in = UserCreate(email=username, password=password, is_superuser=True)
+    user_in = UserCreate(email=username, password=password)
     user = crud.create_user(session=db, user_create=user_in)
     user_2 = db.get(User, user.id)
     assert user_2
@@ -80,10 +116,10 @@ def test_get_user(db: Session) -> None:
 def test_update_user(db: Session) -> None:
     password = random_lower_string()
     email = random_email()
-    user_in = UserCreate(email=email, password=password, is_superuser=True)
+    user_in = UserCreate(email=email, password=password)
     user = crud.create_user(session=db, user_create=user_in)
     new_password = random_lower_string()
-    user_in_update = UserUpdate(password=new_password, is_superuser=True)
+    user_in_update = UserUpdate(password=new_password)
     if user.id is not None:
         crud.update_user(session=db, db_user=user, user_in=user_in_update)
     user_2 = db.get(User, user.id)
