@@ -3,10 +3,12 @@ from pathlib import Path
 import sentry_sdk
 from fastapi import FastAPI
 from fastapi.routing import APIRoute
+from sqlmodel import Session
 from starlette.middleware.cors import CORSMiddleware
 
 from app.api.main import api_router
 from app.core.config import settings
+from app.core.db import engine, init_db
 
 FRONTEND_DIR = Path(__file__).parent / "frontend"
 
@@ -17,6 +19,10 @@ def custom_generate_unique_id(route: APIRoute) -> str:
 
 if settings.SENTRY_DSN and settings.FASTAPI_ENV != "development":
     sentry_sdk.init(dsn=str(settings.SENTRY_DSN), enable_tracing=True)
+
+if settings.FASTAPI_ENV == "development":
+    with Session(engine) as session:
+        init_db(session)
 
 app = FastAPI(
     title=settings.PROJECT_NAME,

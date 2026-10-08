@@ -1,4 +1,3 @@
-import warnings
 from typing import Literal, Self
 
 from pydantic import (
@@ -60,9 +59,7 @@ class Settings(BaseSettings):
                 f'The value of {var_name} is "changethis", '
                 "for security, please change it, at least for deployments."
             )
-            if self.FASTAPI_ENV == "development":
-                warnings.warn(message, stacklevel=1)
-            else:
+            if self.FASTAPI_ENV != "development":
                 raise ValueError(message)
 
     @model_validator(mode="after")
