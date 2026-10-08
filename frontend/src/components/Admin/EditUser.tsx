@@ -29,6 +29,10 @@ import {
 import { Input } from "@/components/ui/input"
 import { LoadingButton } from "@/components/ui/loading-button"
 import useCustomToast from "@/hooks/useCustomToast"
+import {
+  ASSIGNABLE_PERMISSIONS,
+  toAssignablePermissions,
+} from "@/lib/permissions"
 import { handleError } from "@/utils"
 
 const formSchema = z
@@ -41,7 +45,7 @@ const formSchema = z
       .optional()
       .or(z.literal("")),
     confirm_password: z.string().optional(),
-    is_superuser: z.boolean().optional(),
+    permissions: z.array(z.enum(ASSIGNABLE_PERMISSIONS)),
     is_active: z.boolean().optional(),
   })
   .refine((data) => !data.password || data.password === data.confirm_password, {
@@ -68,7 +72,7 @@ const EditUser = ({ user, onSuccess }: EditUserProps) => {
     defaultValues: {
       email: user.email,
       full_name: user.full_name ?? undefined,
-      is_superuser: user.is_superuser,
+      permissions: toAssignablePermissions(user.permissions),
       is_active: user.is_active,
     },
   })
@@ -188,16 +192,47 @@ const EditUser = ({ user, onSuccess }: EditUserProps) => {
 
               <FormField
                 control={form.control}
-                name="is_superuser"
+                name="permissions"
                 render={({ field }) => (
                   <FormItem className="flex items-center gap-3 space-y-0">
                     <FormControl>
                       <Checkbox
-                        checked={field.value}
-                        onCheckedChange={field.onChange}
+                        checked={field.value.includes("admin")}
+                        onCheckedChange={(checked) =>
+                          field.onChange(
+                            checked
+                              ? [...field.value, "admin"]
+                              : field.value.filter((p) => p !== "admin"),
+                          )
+                        }
                       />
                     </FormControl>
-                    <FormLabel className="font-normal">Is superuser?</FormLabel>
+                    <FormLabel className="font-normal">admin</FormLabel>
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="permissions"
+                render={({ field }) => (
+                  <FormItem className="flex items-center gap-3 space-y-0">
+                    <FormControl>
+                      <Checkbox
+                        checked={field.value.includes("customer_service")}
+                        onCheckedChange={(checked) =>
+                          field.onChange(
+                            checked
+                              ? [...field.value, "customer_service"]
+                              : field.value.filter(
+                                  (p) => p !== "customer_service",
+                                ),
+                          )
+                        }
+                      />
+                    </FormControl>
+                    <FormLabel className="font-normal">
+                      customer_service
+                    </FormLabel>
                   </FormItem>
                 )}
               />
