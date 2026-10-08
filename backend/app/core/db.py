@@ -1,8 +1,8 @@
-from sqlmodel import Session, create_engine, select
+from sqlmodel import Session, SQLModel, create_engine, select
 
 from app import crud
 from app.core.config import settings
-from app.models import ADMIN_PERMISSION, User, UserCreate
+from app.models import ADMIN_PERMISSION, Permission, User, UserCreate
 
 engine = create_engine(
     str(settings.DATABASE_URL),
@@ -16,13 +16,23 @@ engine = create_engine(
 
 
 def init_db(session: Session) -> None:
-    # Tables should be created with Alembic migrations
-    # But if you don't want to use migrations, create
-    # the tables un-commenting the next lines
-    # from sqlmodel import SQLModel
-
+    # Ensure tables exist. In deployed environments tables are created with
+    # Alembic migrations (see prestart.sh), but generate-client.sh and a fresh
+    # local sqlite DB may import the app before migrations have run.
+    # create_all is idempotent (checkfirst=True), so it is safe when
+    # migrations already created the tables.
     # This works because the models are already imported and registered from app.models
-    # SQLModel.metadata.create_all(engine)
+    SQLModel.metadata.create_all(engine)
+
+    # Ensure the permission rows exist (migrations seed them, but a DB created
+    # via create_all above would have an empty permission table).
+    for permission_name in {ADMIN_PERMISSION, "customer_service"}:
+        permission = session.exec(
+            select(Permission).where(Permission.name == permission_name)
+        ).first()
+        if not permission:
+            session.add(Permission(name=permission_name))
+    session.commit()
 
     user = session.exec(
         select(User).where(User.email == settings.FIRST_SUPERUSER)
