@@ -1,0 +1,589 @@
+/* biome-ignore-all lint/style/noDescendingSpecificity: Component-scoped CSS intentionally overrides generic navigation selectors. */
+/* biome-ignore-all lint/complexity/noImportantStyles: React Three Fiber controls the canvas dimensions inline. */
+.vv-page {
+  min-height: 100vh;
+  background: #071525;
+  color: #f4f8f7;
+}
+.vv-page a {
+  color: inherit;
+  text-decoration: none;
+}
+.vv-page nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  max-width: 1440px;
+  margin: 0 auto;
+  padding: 24px clamp(24px, 7vw, 100px);
+  border-bottom: 1px solid #d7f4ff18;
+}
+.vv-page nav > a:first-child {
+  font-size: 14px;
+  font-weight: 800;
+  letter-spacing: 0.16em;
+}
+.vv-page nav > div {
+  display: flex;
+  gap: 28px;
+  color: #b9cbd1;
+  font-size: 13px;
+}
+.vv-nav-cta,
+.vv-hero > a,
+.vv-stories > a {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 11px 14px;
+  border: 1px solid #8fe0c066;
+  border-radius: 8px;
+  background: #102b3d;
+  font-size: 12px;
+}
+.vv-hero {
+  position: relative;
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  gap: 36px;
+  min-height: 520px;
+  padding: clamp(90px, 12vw, 170px) clamp(24px, 7vw, 100px) 75px;
+  overflow: hidden;
+  background:
+    radial-gradient(circle at 85% 20%, #287b9e55, transparent 28%),
+    linear-gradient(120deg, #071525, #0b3048);
+}
+.vv-hero::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, #071525bb, transparent);
+  pointer-events: none;
+}
+.vv-hero > div,
+.vv-hero aside {
+  position: relative;
+  z-index: 1;
+}
+.vv-hero p,
+.vv-cards p,
+.vv-stories > p {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #8fe0c0;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+}
+.vv-hero h1 {
+  margin: 18px 0;
+  font-size: clamp(54px, 7.5vw, 108px);
+  line-height: 0.84;
+  letter-spacing: -0.09em;
+}
+.vv-hero h1 em,
+.vv-stories h2 em {
+  color: #c96f5d;
+  font-style: normal;
+}
+.vv-hero article {
+  max-width: 420px;
+  margin-bottom: 25px;
+  color: #b9cbd1;
+  font-size: 15px;
+  line-height: 1.6;
+}
+.vv-hero aside {
+  display: flex;
+  gap: 26px;
+  color: #b9cbd1;
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+.vv-hero aside strong {
+  display: block;
+  margin-bottom: 6px;
+  color: #8fe0c0;
+  font-size: 26px;
+}
+.vv-globe {
+  max-width: 1440px;
+  margin: 0 auto;
+  padding: 92px clamp(24px, 7vw, 100px) 42px;
+  background: #071525;
+  color: #f4f8f7;
+}
+.vv-globe > header {
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  gap: 20px;
+}
+.vv-globe header p,
+.vv-info > div > p {
+  margin: 0 0 12px;
+  color: #8fe0c0;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+.vv-globe h2 {
+  margin: 0;
+  font-size: clamp(48px, 6vw, 86px);
+  line-height: 0.86;
+  letter-spacing: -0.08em;
+}
+.vv-globe h2 em {
+  color: #c96f5d;
+  font-style: normal;
+}
+.vv-globe > header > span {
+  color: #8fe0c0;
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+.vv-stage {
+  position: relative;
+  height: min(62vw, 690px);
+  min-height: 560px;
+  margin-top: 42px;
+  overflow: hidden;
+  border: 1px solid #d7f4ff24;
+  border-radius: 22px;
+  background: #030b17;
+  box-shadow: 0 28px 75px #0006;
+}
+.vv-stage canvas {
+  position: absolute !important;
+  inset: 0;
+  width: 100% !important;
+  height: 100% !important;
+}
+.vv-stage--approach::after {
+  content: "";
+  position: absolute;
+  inset: -10%;
+  pointer-events: none;
+  background: repeating-linear-gradient(
+    110deg,
+    transparent 0 30px,
+    #d7f4ff0a 31px 33px,
+    transparent 34px 68px
+  );
+  animation: vv-streak 0.55s linear infinite;
+}
+@keyframes vv-streak {
+  to {
+    transform: translate(7%, 7%);
+  }
+}
+.vv-search {
+  position: absolute;
+  z-index: 3;
+  top: 25px;
+  left: 25px;
+  width: min(290px, calc(100% - 50px));
+}
+.vv-search label {
+  display: block;
+  margin-bottom: 9px;
+  color: #8fa9b7;
+  font-size: 10px;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+}
+.vv-search > div {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 0 13px;
+  border: 1px solid #d7f4ff38;
+  border-radius: 10px;
+  background: #071525dd;
+}
+.vv-search svg {
+  color: #8fe0c0;
+}
+.vv-search input {
+  width: 100%;
+  height: 48px;
+  border: 0;
+  outline: 0;
+  background: transparent;
+  color: #fff;
+  font: inherit;
+  font-size: 13px;
+}
+.vv-search section {
+  margin-top: 7px;
+  overflow: hidden;
+  border: 1px solid #d7f4ff26;
+  border-radius: 10px;
+  background: #0b1e30f5;
+}
+.vv-search button {
+  display: flex;
+  width: 100%;
+  align-items: center;
+  justify-content: space-between;
+  padding: 11px 13px;
+  border: 0;
+  border-bottom: 1px solid #d7f4ff15;
+  background: transparent;
+  color: #f4f8f7;
+  text-align: left;
+  cursor: pointer;
+}
+.vv-search small {
+  display: block;
+  margin-top: 3px;
+  color: #91a9b5;
+  font-size: 10px;
+}
+.vv-controls,
+.vv-status {
+  position: absolute;
+  z-index: 3;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 13px;
+  border: 1px solid #d7f4ff32;
+  border-radius: 9px;
+  background: #071525cc;
+  font-size: 10px;
+}
+.vv-controls {
+  right: 25px;
+  bottom: 25px;
+  color: #91a9b5;
+}
+.vv-controls button,
+.vv-info button {
+  padding: 8px 10px;
+  border: 1px solid #d7f4ff45;
+  border-radius: 7px;
+  background: #123248;
+  color: #f4f8f7;
+  font: inherit;
+  cursor: pointer;
+}
+.vv-route-summary {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: end;
+  gap: 10px;
+  margin-top: 14px;
+  padding: 12px 0;
+  border-block: 1px solid #d7f4ff1c;
+}
+.vv-route-summary div {
+  display: grid;
+  gap: 4px;
+}
+.vv-route-summary div:last-child {
+  text-align: right;
+}
+.vv-route-summary small {
+  color: #91a9b5;
+  font-size: 9px;
+  letter-spacing: 0.1em;
+}
+.vv-route-summary strong {
+  color: #fff;
+  font-size: 13px;
+  font-weight: 500;
+}
+.vv-route-summary b {
+  padding-bottom: 1px;
+  color: #f6c978;
+  font-size: 19px;
+}
+.vv-controls button:disabled {
+  opacity: 0.55;
+  cursor: default;
+}
+.vv-status {
+  right: 25px;
+  bottom: 70px;
+  color: #8fe0c0;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+.vv-info {
+  position: absolute;
+  z-index: 4;
+  top: 25px;
+  right: 25px;
+  width: min(320px, calc(100% - 50px));
+  overflow: hidden;
+  border: 1px solid #d7f4ff2c;
+  border-radius: 14px;
+  background: #071525e8;
+  box-shadow: 0 18px 45px #0008;
+}
+.vv-info > div {
+  padding: 17px;
+}
+.vv-info h3 {
+  margin: 0;
+  color: #fff;
+  font-size: 29px;
+  letter-spacing: -0.06em;
+}
+.vv-info > div > span,
+.vv-info article {
+  display: block;
+  color: #91a9b5;
+  font-size: 12px;
+  line-height: 1.5;
+}
+.vv-info article {
+  margin: 14px 0;
+}
+.vv-info dl {
+  display: flex;
+  gap: 24px;
+  margin: 0;
+  padding: 12px 0;
+  border-block: 1px solid #d7f4ff1c;
+}
+.vv-info dt {
+  color: #91a9b5;
+  font-size: 9px;
+  letter-spacing: 0.1em;
+}
+.vv-info dd {
+  margin: 4px 0 0;
+  color: #fff;
+  font-size: 11px;
+}
+.vv-info button {
+  margin-top: 14px;
+  background: #c96f5d;
+  border-color: #c96f5d;
+}
+.vv-map-frame {
+  position: relative;
+  height: 130px;
+}
+.vv-leaflet {
+  width: 100%;
+  height: 100%;
+  background: #dce7e0;
+}
+.vv-leaflet .leaflet-tile {
+  filter: saturate(0.72) contrast(1.04) brightness(0.83) hue-rotate(145deg);
+}
+.vv-map-overlay {
+  position: absolute;
+  z-index: 1200;
+  inset: 0;
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  padding: 11px;
+  background: linear-gradient(0deg, #071525c8, transparent 65%);
+  pointer-events: none;
+  color: #d7e9ec;
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+.vv-map-overlay button,
+.vv-map-modal header button {
+  display: grid;
+  width: 30px;
+  height: 30px;
+  place-items: center;
+  border: 1px solid #d7f4ff45;
+  border-radius: 50%;
+  background: #071525e8;
+  color: #fff;
+  cursor: pointer;
+  pointer-events: auto;
+}
+.vv-map-pin-shell {
+  background: transparent;
+  border: 0;
+}
+.vv-map-pin {
+  display: grid;
+  width: 28px;
+  height: 28px;
+  place-items: center;
+  border: 1px solid #8fe0c0a8;
+  border-radius: 50%;
+  background: #071525e8;
+  box-shadow: 0 0 0 7px #8fe0c022;
+}
+.vv-map-pin i {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #8fe0c0;
+}
+.vv-leaflet .leaflet-control-zoom {
+  border: 1px solid #d7f4ff45;
+}
+.vv-leaflet .leaflet-control-zoom a {
+  border: 0;
+  border-bottom: 1px solid #d7f4ff25;
+  background: #071525e8;
+  color: #fff;
+}
+.vv-leaflet .leaflet-control-attribution {
+  background: #071525aa;
+  color: #91a9b5;
+  font-size: 8px;
+}
+.vv-map-backdrop {
+  position: fixed;
+  z-index: 10000;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  padding: 5vw;
+  background: #020a13c7;
+  backdrop-filter: blur(8px);
+}
+.vv-map-modal {
+  position: relative;
+  width: min(80vw, 1100px);
+  height: min(80vh, 760px);
+  overflow: hidden;
+  border: 1px solid #d7f4ff30;
+  border-radius: 18px;
+  background: #071525;
+}
+.vv-map-modal-header {
+  position: relative;
+  z-index: 2000;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 20px;
+}
+.vv-map-modal-header small {
+  color: #8fe0c0;
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+.vv-map-modal-header h2 {
+  margin: 3px 0 0;
+  font-size: 28px;
+}
+.vv-map-large {
+  height: calc(100% - 78px);
+  margin: 0 12px 12px;
+  overflow: hidden;
+  border-radius: 12px;
+}
+.vv-cards {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+  max-width: 1240px;
+  margin: 0 auto;
+  padding: 80px clamp(24px, 7vw, 100px);
+}
+.vv-cards article {
+  min-height: 230px;
+  padding: 25px;
+  border: 1px solid #d7f4ff28;
+  border-radius: 15px;
+  background: #0b2030;
+}
+.vv-cards svg {
+  color: #8fe0c0;
+}
+.vv-cards h2 {
+  margin: 32px 0 10px;
+  font-size: 25px;
+  letter-spacing: -0.05em;
+}
+.vv-cards span {
+  color: #91a9b5;
+  font-size: 13px;
+  line-height: 1.55;
+}
+.vv-stories {
+  padding: 90px clamp(24px, 7vw, 100px);
+  background: #0b2030;
+}
+.vv-stories h2 {
+  margin: 12px 0 25px;
+  font-size: clamp(45px, 6vw, 82px);
+  line-height: 0.87;
+  letter-spacing: -0.08em;
+}
+@media (max-width: 800px) {
+  .vv-page nav > div {
+    display: none;
+  }
+  .vv-hero {
+    min-height: 480px;
+    align-items: start;
+    flex-direction: column;
+  }
+  .vv-hero aside {
+    gap: 16px;
+  }
+  .vv-globe {
+    padding: 70px 6vw 28px;
+  }
+  .vv-globe > header {
+    align-items: start;
+    flex-direction: column;
+  }
+  .vv-stage {
+    height: 720px;
+    min-height: 720px;
+  }
+  .vv-search {
+    top: 17px;
+    left: 17px;
+    width: calc(100% - 34px);
+  }
+  .vv-info {
+    top: auto;
+    right: 17px;
+    bottom: 74px;
+    left: 17px;
+    width: auto;
+  }
+  .vv-controls {
+    right: 17px;
+    bottom: 17px;
+    left: 17px;
+    justify-content: space-between;
+  }
+  .vv-status {
+    right: 17px;
+    bottom: 65px;
+  }
+  .vv-route-summary strong {
+    font-size: 12px;
+  }
+  .vv-cards {
+    grid-template-columns: 1fr;
+    padding-block: 42px;
+  }
+  .vv-map-modal {
+    width: 100%;
+    height: 82vh;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .vv-stage--approach::after {
+    animation: none;
+  }
+}
