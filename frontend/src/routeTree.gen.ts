@@ -17,7 +17,11 @@ import { Route as SignupRouteImport } from './routes/signup'
 import { Route as VoyagevistaRouteImport } from './routes/voyagevista'
 import { Route as LayoutIndexRouteImport } from './routes/_layout/index'
 import { Route as LayoutAdminRouteImport } from './routes/_layout/admin'
+import { Route as LayoutCasesRouteImport } from './routes/_layout/cases'
+import { Route as LayoutCustomersRouteImport } from './routes/_layout/customers'
+import { Route as LayoutFeedbackRouteImport } from './routes/_layout/feedback'
 import { Route as LayoutItemsRouteImport } from './routes/_layout/items'
+import { Route as LayoutPrivacyRouteImport } from './routes/_layout/privacy'
 import { Route as LayoutSettingsRouteImport } from './routes/_layout/settings'
 
 const LayoutRoute = LayoutRouteImport.update({
@@ -59,9 +63,29 @@ const LayoutAdminRoute = LayoutAdminRouteImport.update({
   path: '/admin',
   getParentRoute: () => LayoutRoute,
 } as any)
+const LayoutCasesRoute = LayoutCasesRouteImport.update({
+  id: '/cases',
+  path: '/cases',
+  getParentRoute: () => LayoutRoute,
+} as any)
+const LayoutCustomersRoute = LayoutCustomersRouteImport.update({
+  id: '/customers',
+  path: '/customers',
+  getParentRoute: () => LayoutRoute,
+} as any)
+const LayoutFeedbackRoute = LayoutFeedbackRouteImport.update({
+  id: '/feedback',
+  path: '/feedback',
+  getParentRoute: () => LayoutRoute,
+} as any)
 const LayoutItemsRoute = LayoutItemsRouteImport.update({
   id: '/items',
   path: '/items',
+  getParentRoute: () => LayoutRoute,
+} as any)
+const LayoutPrivacyRoute = LayoutPrivacyRouteImport.update({
+  id: '/privacy',
+  path: '/privacy',
   getParentRoute: () => LayoutRoute,
 } as any)
 const LayoutSettingsRoute = LayoutSettingsRouteImport.update({
@@ -78,7 +102,11 @@ export interface FileRoutesByFullPath {
   '/signup': typeof SignupRoute
   '/voyagevista': typeof VoyagevistaRoute
   '/admin': typeof LayoutAdminRoute
+  '/cases': typeof LayoutCasesRoute
+  '/customers': typeof LayoutCustomersRoute
+  '/feedback': typeof LayoutFeedbackRoute
   '/items': typeof LayoutItemsRoute
+  '/privacy': typeof LayoutPrivacyRoute
   '/settings': typeof LayoutSettingsRoute
 }
 export interface FileRoutesByTo {
@@ -88,7 +116,11 @@ export interface FileRoutesByTo {
   '/signup': typeof SignupRoute
   '/voyagevista': typeof VoyagevistaRoute
   '/admin': typeof LayoutAdminRoute
+  '/cases': typeof LayoutCasesRoute
+  '/customers': typeof LayoutCustomersRoute
+  '/feedback': typeof LayoutFeedbackRoute
   '/items': typeof LayoutItemsRoute
+  '/privacy': typeof LayoutPrivacyRoute
   '/settings': typeof LayoutSettingsRoute
   '/': typeof LayoutIndexRoute
 }
@@ -101,7 +133,11 @@ export interface FileRoutesById {
   '/signup': typeof SignupRoute
   '/voyagevista': typeof VoyagevistaRoute
   '/_layout/admin': typeof LayoutAdminRoute
+  '/_layout/cases': typeof LayoutCasesRoute
+  '/_layout/customers': typeof LayoutCustomersRoute
+  '/_layout/feedback': typeof LayoutFeedbackRoute
   '/_layout/items': typeof LayoutItemsRoute
+  '/_layout/privacy': typeof LayoutPrivacyRoute
   '/_layout/settings': typeof LayoutSettingsRoute
   '/_layout/': typeof LayoutIndexRoute
 }
@@ -115,7 +151,11 @@ export interface FileRouteTypes {
     | '/signup'
     | '/voyagevista'
     | '/admin'
+    | '/cases'
+    | '/customers'
+    | '/feedback'
     | '/items'
+    | '/privacy'
     | '/settings'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -125,7 +165,11 @@ export interface FileRouteTypes {
     | '/signup'
     | '/voyagevista'
     | '/admin'
+    | '/cases'
+    | '/customers'
+    | '/feedback'
     | '/items'
+    | '/privacy'
     | '/settings'
     | '/'
   id:
@@ -137,7 +181,11 @@ export interface FileRouteTypes {
     | '/signup'
     | '/voyagevista'
     | '/_layout/admin'
+    | '/_layout/cases'
+    | '/_layout/customers'
+    | '/_layout/feedback'
     | '/_layout/items'
+    | '/_layout/privacy'
     | '/_layout/settings'
     | '/_layout/'
   fileRoutesById: FileRoutesById
@@ -209,11 +257,39 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LayoutAdminRouteImport
       parentRoute: typeof LayoutRoute
     }
+    '/_layout/cases': {
+      id: '/_layout/cases'
+      path: '/cases'
+      fullPath: '/cases'
+      preLoaderRoute: typeof LayoutCasesRouteImport
+      parentRoute: typeof LayoutRoute
+    }
+    '/_layout/customers': {
+      id: '/_layout/customers'
+      path: '/customers'
+      fullPath: '/customers'
+      preLoaderRoute: typeof LayoutCustomersRouteImport
+      parentRoute: typeof LayoutRoute
+    }
+    '/_layout/feedback': {
+      id: '/_layout/feedback'
+      path: '/feedback'
+      fullPath: '/feedback'
+      preLoaderRoute: typeof LayoutFeedbackRouteImport
+      parentRoute: typeof LayoutRoute
+    }
     '/_layout/items': {
       id: '/_layout/items'
       path: '/items'
       fullPath: '/items'
       preLoaderRoute: typeof LayoutItemsRouteImport
+      parentRoute: typeof LayoutRoute
+    }
+    '/_layout/privacy': {
+      id: '/_layout/privacy'
+      path: '/privacy'
+      fullPath: '/privacy'
+      preLoaderRoute: typeof LayoutPrivacyRouteImport
       parentRoute: typeof LayoutRoute
     }
     '/_layout/settings': {
@@ -228,14 +304,22 @@ declare module '@tanstack/react-router' {
 
 interface LayoutRouteChildren {
   LayoutAdminRoute: typeof LayoutAdminRoute
+  LayoutCasesRoute: typeof LayoutCasesRoute
+  LayoutCustomersRoute: typeof LayoutCustomersRoute
+  LayoutFeedbackRoute: typeof LayoutFeedbackRoute
   LayoutItemsRoute: typeof LayoutItemsRoute
+  LayoutPrivacyRoute: typeof LayoutPrivacyRoute
   LayoutSettingsRoute: typeof LayoutSettingsRoute
   LayoutIndexRoute: typeof LayoutIndexRoute
 }
 
 const LayoutRouteChildren: LayoutRouteChildren = {
   LayoutAdminRoute: LayoutAdminRoute,
+  LayoutCasesRoute: LayoutCasesRoute,
+  LayoutCustomersRoute: LayoutCustomersRoute,
+  LayoutFeedbackRoute: LayoutFeedbackRoute,
   LayoutItemsRoute: LayoutItemsRoute,
+  LayoutPrivacyRoute: LayoutPrivacyRoute,
   LayoutSettingsRoute: LayoutSettingsRoute,
   LayoutIndexRoute: LayoutIndexRoute,
 }
